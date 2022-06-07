@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +19,10 @@ import java.util.Map;
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-    private final Map<Integer, User> users = new HashMap<>();
-    private static int counter;
+    private final Map<Long, User> users = new HashMap<>();
+    private static Long counter = 0L;
 
-    public int generateId() {
+    public Long generateId() {
         return ++counter;
     }
 
@@ -35,10 +34,11 @@ public class UserController {
 
     @PostMapping
     public User addUser( @Valid @RequestBody User user) {
+        log.debug("Запрос на добавление пользователя: {}", user);
         if (user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
-        int userId = generateId();
+        Long userId = generateId();
         user.setId(userId);
         users.put(userId, user);
         log.info("Добавлен пользователь: {}", user);
@@ -47,6 +47,7 @@ public class UserController {
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
+        log.debug("Запрос на обновление пользователя: {}", user);
         if (user.getId() < 1) {
             throw new ValidationException("Неверный идентификатор пользователя");
         }

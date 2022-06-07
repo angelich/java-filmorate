@@ -10,13 +10,15 @@ import java.time.LocalDate;
 
 @Data
 public class User {
-    int id;
-    @Email
+    Long id;
+    @Email(message = "invalid email")
+    @NotNull(message = "email can't be empty")
+    @NotBlank(message = "email can't be empty")
     String email;
-    @NotBlank
-    @NotNull
+    @NotBlank(message = "login can't be empty")
+    @NotNull(message = "login can't be empty")
     String login;
     String name;
-    @Past
+    @Past(message = "birthday can't be in future")
     LocalDate birthday;
 }

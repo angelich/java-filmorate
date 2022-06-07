@@ -22,10 +22,10 @@ import java.util.Map;
 public class FilmController {
     public static final int DESCRIPTION_MAX_LENGTH = 200;
     public static final LocalDate FILMOGRAPHY_START_DATE = LocalDate.of(1895, 12, 28);
-    private Map<Integer, Film> films = new HashMap<>();
-    private static int counter;
+    private Map<Long, Film> films = new HashMap<>();
+    private static Long counter = 0L;
 
-    public int generateId() {
+    public Long generateId() {
         return ++counter;
     }
 
@@ -37,7 +37,7 @@ public class FilmController {
     @PostMapping
     public Film addFilm(@Valid  @RequestBody Film film) {
         validateFilm(film);
-        int filmId = generateId();
+        Long filmId = generateId();
         film.setId(filmId);
         films.put(filmId, film);
         log.info("Добавлен фильм: {}", film);
