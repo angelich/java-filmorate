@@ -1,9 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,23 +16,23 @@ import java.util.Map;
 @RestController
 @RequestMapping("/films")
 @Slf4j
-public class FilmController {
+public class FilmController extends FilmorateController<Film> {
     public static final int DESCRIPTION_MAX_LENGTH = 200;
     public static final LocalDate FILMOGRAPHY_START_DATE = LocalDate.of(1895, 12, 28);
     private Map<Long, Film> films = new HashMap<>();
-    private static Long counter = 0L;
+    private Long counter = 0L;
 
     public Long generateId() {
         return ++counter;
     }
 
-    @GetMapping
-    public Collection<Film> getAllFilms() {
+    @Override
+    public Collection<Film> getAll() {
         return films.values();
     }
 
-    @PostMapping
-    public Film addFilm(@Valid  @RequestBody Film film) {
+    @Override
+    public Film create(@Valid @RequestBody Film film) {
         validateFilm(film);
         Long filmId = generateId();
         film.setId(filmId);
@@ -44,8 +41,8 @@ public class FilmController {
         return film;
     }
 
-    @PutMapping
-    public Film updateFilm(@Valid @RequestBody Film film) {
+    @Override
+    public Film update(@Valid @RequestBody Film film) {
         validateFilm(film);
         if (film.getId() < 1) {
             throw new ValidationException("Неверный идентификатор фильма");
@@ -55,7 +52,7 @@ public class FilmController {
         return film;
     }
 
-    private void validateFilm(Film film) {
+    private static void validateFilm(Film film) {
         try {
             if (film.getDescription().length() > DESCRIPTION_MAX_LENGTH) {
                 throw new ValidationException("Максимальная длина описания — 200 символов");
