@@ -12,6 +12,8 @@ public interface UserStorage {
      */
     Collection<User> getAll();
 
+    User getUser(Long userId);
+
     /**
      * @param user Объект пользователя
      * @return созданный пользователь
