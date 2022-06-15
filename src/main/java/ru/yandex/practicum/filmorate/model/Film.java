@@ -25,4 +25,12 @@ public class Film {
     @Positive(message = "duration should be positive")
     Long duration;
     Set<Long> likes;
+
+    public void addLike(Long userId) {
+        likes.add(userId);
+    }
+
+    public void removeLike(Long userId) {
+        likes.remove(userId);
+    }
 }

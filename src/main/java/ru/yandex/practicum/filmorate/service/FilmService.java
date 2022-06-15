@@ -11,11 +11,15 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class FilmService {
     public static final int DESCRIPTION_MAX_LENGTH = 200;
+    public static final Long COUNT_OF_TOP_FILMS = 10L;
     public static final LocalDate FILMOGRAPHY_START_DATE = LocalDate.of(1895, 12, 28);
     private final FilmStorage filmStorage;
 
@@ -53,5 +57,20 @@ public class FilmService {
             log.error(e.getMessage());
             throw new ValidationException(e.getMessage());
         }
+    }
+
+    public void addLike(Long filmId, Long userId) {
+        filmStorage.getFilm(filmId).addLike(userId);
+    }
+
+    public void removeLike(Long filmId, Long userId) {
+        filmStorage.getFilm(filmId).removeLike(userId);
+    }
+
+    public List<Film> getPopularFilmList() {
+        return filmStorage.getAll().stream()
+                .sorted(Comparator.comparingInt(value -> value.getLikes().size()))
+                .limit(COUNT_OF_TOP_FILMS)
+                .collect(Collectors.toList());
     }
 }

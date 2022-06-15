@@ -13,7 +13,7 @@ import java.util.Map;
 @Component
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
-    private Map<Long, Film> films = new HashMap<>();
+    private final Map<Long, Film> films = new HashMap<>();
     private Long counter = 0L;
 
     public Long generateId() {
@@ -23,6 +23,11 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public Collection<Film> getAll() {
         return films.values();
+    }
+
+    @Override
+    public Film getFilm(Long filmId) {
+        return films.get(filmId);
     }
 
     @Override
