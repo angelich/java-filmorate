@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+/**
+ * Сервис по работе с пользователями
+ */
 @Service
 @Slf4j
 public class UserService {

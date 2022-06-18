@@ -8,6 +8,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Хранилище пользователей в памяти
+ */
 @Component
 @Slf4j
 public class InMemoryUserStorage implements UserStorage {

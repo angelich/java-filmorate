@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+/**
+ * Сервис по работе с фильмами
+ */
 @Service
 @Slf4j
 public class FilmService {

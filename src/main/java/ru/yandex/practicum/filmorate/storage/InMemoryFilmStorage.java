@@ -10,6 +10,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Хранилище фильмов в памяти
+ */
 @Component
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {

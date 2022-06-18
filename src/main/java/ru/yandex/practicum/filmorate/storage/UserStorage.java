@@ -8,21 +8,22 @@ import java.util.Collection;
 
 public interface UserStorage {
     /**
-     * @return всех пользователей
+     * Получение всех пользователей
      */
     Collection<User> getAll();
 
+    /**
+     * Получение пользователя
+     */
     User getUser(Long userId);
 
     /**
-     * @param user Объект пользователя
-     * @return созданный пользователь
+     * Создание пользователя
      */
     User create(@Valid @RequestBody User user);
 
     /**
-     * @param user Обновленный объект пользователя
-     * @return обновленный пользователь
+     * Обновление пользователя
      */
     User update(@Valid @RequestBody User user);
 }
