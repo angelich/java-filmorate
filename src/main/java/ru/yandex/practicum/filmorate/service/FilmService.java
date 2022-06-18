@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class FilmService {
     public static final int DESCRIPTION_MAX_LENGTH = 200;
-    public static final Long COUNT_OF_TOP_FILMS = 10L;
+    public static final long COUNT_OF_TOP_FILMS = 10L;
     public static final LocalDate FILMOGRAPHY_START_DATE = LocalDate.of(1895, 12, 28);
     private final FilmStorage filmStorage;
 
@@ -72,5 +72,9 @@ public class FilmService {
                 .sorted(Comparator.comparingInt(value -> value.getLikes().size()))
                 .limit(COUNT_OF_TOP_FILMS)
                 .collect(Collectors.toList());
+    }
+
+    public Film getFilm(Long filmId) {
+        return filmStorage.getFilm(filmId);
     }
 }

@@ -56,4 +56,8 @@ public class UserService {
                 .filter(user -> userStorage.getUser(userId).getFriends().contains(user.getId()))
                 .collect(Collectors.toList());
     }
+
+    public User getUser(Long userId) {
+        return userStorage.getUser(userId);
+    }
 }
