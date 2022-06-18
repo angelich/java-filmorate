@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,6 +55,14 @@ public class UserService {
     public List<User> getUserFriends(Long userId) {
         return userStorage.getAll().stream()
                 .filter(user -> userStorage.getUser(userId).getFriends().contains(user.getId()))
+                .collect(Collectors.toList());
+    }
+
+    public List<User> getCommonFriends(Long userId, Long otherId) {
+        Collection<Long> userFriendsList = new ArrayList<>(userStorage.getUser(userId).getFriends());
+        userFriendsList.retainAll(userStorage.getUser(otherId).getFriends());
+        return userStorage.getAll().stream()
+                .filter(user -> userFriendsList.contains(user.getId()))
                 .collect(Collectors.toList());
     }
 
