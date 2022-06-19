@@ -12,7 +12,6 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -44,9 +43,6 @@ public class FilmService {
     }
 
     public Film update(@Valid @RequestBody Film film) {
-        if (film.getId() < 1) {
-            throw new ValidationException("Неверный идентификатор фильма");
-        }
         filmExistOrThrow(film.getId());
         validateFilm(film);
         return filmStorage.update(film);
@@ -66,7 +62,7 @@ public class FilmService {
 
     public List<Film> getPopularFilmList(Long count) {
         return filmStorage.getAll().stream()
-                .sorted(Comparator.comparingInt(value -> value.getLikes().size()))
+                .sorted((o1, o2) ->  o2.getLikes().size() - o1.getLikes().size())
                 .limit(count)
                 .collect(Collectors.toList());
     }
