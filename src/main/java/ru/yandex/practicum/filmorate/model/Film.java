@@ -25,7 +25,9 @@ public class Film {
     LocalDate releaseDate;
     @Positive(message = "duration should be positive")
     Long duration;
-    Set<Long> likes = new HashSet<>();;
+    Set<Long> likes = new HashSet<>();
+    Long mpa;
+    Set<Genre> genres;
 
     public void addLike(Long userId) {
         likes.add(userId);
