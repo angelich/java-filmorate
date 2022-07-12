@@ -17,17 +17,27 @@ import java.util.Set;
 @Getter
 @Setter
 public class Film {
-    Long id;
+    public Film(Long id, String name, String description, LocalDate releaseDate, Long duration, MPA mpa) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.mpa = mpa;
+    }
+
+    private Long id;
+
     @NotNull(message = "name can't be empty")
     @NotBlank(message = "name can't be empty")
-    String name;
-    String description;
-    LocalDate releaseDate;
+    private String name;
+    private String description;
+    private LocalDate releaseDate;
     @Positive(message = "duration should be positive")
-    Long duration;
-    Set<Long> likes = new HashSet<>();
-    Long mpa;
-    Set<Genre> genres;
+    private Long duration;
+    private Set<Long> likes = new HashSet<>();
+    private MPA mpa;
+    private Set<Genre> genres;
 
     public void addLike(Long userId) {
         likes.add(userId);
