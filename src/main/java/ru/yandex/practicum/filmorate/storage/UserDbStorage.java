@@ -5,7 +5,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
@@ -16,6 +15,7 @@ import java.sql.Types;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Хранилище пользователей в БД
@@ -41,7 +41,7 @@ public class UserDbStorage implements UserStorage {
 
         List<User> users = jdbcTemplate.query(sql, UserDbStorage::makeUser, userId);
         if (users.size() != 1) {
-            throw new ValidationException("Пользователь не найден");
+            throw new NoSuchElementException("Пользователя с таким идентификатором не существует");
         }
         return users.get(0);
     }

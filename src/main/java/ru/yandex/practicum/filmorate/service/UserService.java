@@ -5,13 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FriendStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 /**
  * Сервис по работе с пользователями
@@ -20,10 +18,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserService {
     private final UserStorage userStorage;
+    private final FriendStorage friendStorage;
 
     @Autowired
-    public UserService(@Qualifier("userDbStorage") UserStorage userStorage) {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage, FriendStorage friendStorage) {
         this.userStorage = userStorage;
+        this.friendStorage = friendStorage;
     }
 
     public Collection<User> getAll() {
@@ -47,33 +47,25 @@ public class UserService {
     public void addFriend(Long userId, Long friendId) {
         userExistOrThrow(userId);
         userExistOrThrow(friendId);
-        userStorage.getUser(userId).addFriend(friendId);
-        userStorage.getUser(friendId).addFriend(userId);
+        friendStorage.addFriend(userId, friendId);
     }
 
     public void deleteFriend(Long userId, Long friendId) {
         userExistOrThrow(userId);
         userExistOrThrow(friendId);
-        userStorage.getUser(userId).deleteFriend(friendId);
-        userStorage.getUser(friendId).deleteFriend(userId);
+        friendStorage.deleteFriend(userId, friendId);
     }
 
     public List<User> getUserFriends(Long userId) {
         userExistOrThrow(userId);
-        return userStorage.getAll().stream()
-                .filter(user -> userStorage.getUser(userId).getFriends().contains(user.getId()))
-                .collect(Collectors.toList());
+        return friendStorage.getUserFriends(userId);
     }
 
     public List<User> getCommonFriends(Long userId, Long otherId) {
         log.info("Запрос общих друзей у пользователей {} и {}", userId, otherId);
         userExistOrThrow(userId);
         userExistOrThrow(otherId);
-        Collection<Long> userFriendsList = new ArrayList<>(userStorage.getUser(userId).getFriends());
-        userFriendsList.retainAll(userStorage.getUser(otherId).getFriends());
-        return userStorage.getAll().stream()
-                .filter(user -> userFriendsList.contains(user.getId()))
-                .collect(Collectors.toList());
+        return friendStorage.getCommonFriends(userId, otherId);
     }
 
     public User getUser(Long userId) {
@@ -82,10 +74,6 @@ public class UserService {
     }
 
     private void userExistOrThrow(Long userId) {
-        boolean isUserNotExist = userStorage.getAll().stream()
-                .noneMatch(user -> user.getId().equals(userId));
-        if (isUserNotExist) {
-            throw new NoSuchElementException("Пользователя с таким идентификатором не существует");
-        }
+        userStorage.getUser(userId);
     }
 }

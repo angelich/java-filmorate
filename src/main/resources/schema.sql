@@ -61,3 +61,8 @@ VALUES ('PG-13');
 
 INSERT INTO GENRE (GENRE_NAME)
 VALUES ( 'Comedy' );
+
+alter table LIKES
+    add constraint LIKES_PK
+        unique (USER_ID, FILM_ID);
+
