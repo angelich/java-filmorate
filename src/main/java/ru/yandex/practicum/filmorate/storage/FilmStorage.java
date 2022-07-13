@@ -11,7 +11,7 @@ public interface FilmStorage {
      */
     Collection<Film> getAll();
 
-    Film getFilm(Long filmId);
+    Film getFilmOrThrow(Long filmId);
 
     /**
      * @param film Объект фильма

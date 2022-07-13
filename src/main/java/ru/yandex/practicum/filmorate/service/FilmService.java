@@ -13,9 +13,6 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 /**
  * Сервис по работе с фильмами
@@ -49,44 +46,12 @@ public class FilmService {
         return filmStorage.update(film);
     }
 
-    public void addLike(Long filmId, Long userId) {
-        filmExistOrThrow(filmId);
-        userExistOrThrow(userId);
-        filmStorage.getFilm(filmId).addLike(userId);
-    }
-
-    public void removeLike(Long filmId, Long userId) {
-        filmExistOrThrow(filmId);
-        userExistOrThrow(userId);
-        filmStorage.getFilm(filmId).removeLike(userId);
-    }
-
-    public List<Film> getPopularFilmList(Long count) {
-        return filmStorage.getAll().stream()
-                .sorted((o1, o2) ->  o2.getLikes().size() - o1.getLikes().size())
-                .limit(count)
-                .collect(Collectors.toList());
-    }
-
     public Film getFilm(Long filmId) {
-        filmExistOrThrow(filmId);
-        return filmStorage.getFilm(filmId);
-    }
-
-    private void userExistOrThrow(Long userId) {
-        boolean isUserNotExist = userStorage.getAll().stream()
-                .noneMatch(user -> user.getId().equals(userId));
-        if (isUserNotExist) {
-            throw new NoSuchElementException("Пользователя с таким идентификатором не существует");
-        }
+        return filmStorage.getFilmOrThrow(filmId);
     }
 
     private void filmExistOrThrow(Long filmId) {
-        boolean isFilmNotExist = filmStorage.getAll().stream()
-                .noneMatch(film -> film.getId().equals(filmId));
-        if (isFilmNotExist) {
-            throw new NoSuchElementException("Фильма с таким идентификатором не существует");
-        }
+        filmStorage.getFilmOrThrow(filmId);
     }
 
     private static void validateFilm(Film film) {

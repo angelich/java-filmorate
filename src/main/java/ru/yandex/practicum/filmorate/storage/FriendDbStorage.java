@@ -16,7 +16,7 @@ public class FriendDbStorage implements FriendStorage {
 
     @Override
     public void addFriend(Long userId, Long friendId) {
-        String sql = "INSERT INTO FRIENDSHIP (USER_ID, FRIEND_ID, STATUS) VALUES ( ?, ?,? )";
+        String sql = "INSERT INTO FRIENDSHIP (USER_ID, FRIEND_ID, STATUS) VALUES (?,?,?)";
         jdbcTemplate.update(sql, userId, friendId, "Approved");
     }
 

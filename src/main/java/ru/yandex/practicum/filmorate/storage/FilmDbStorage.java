@@ -35,7 +35,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public Film getFilm(Long filmId) {
+    public Film getFilmOrThrow(Long filmId) {
         final String sql = "SELECT FILM_ID, FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION, FILM_MPA FROM FILMS" +
               //  "JOIN MPA ON FILM.FILM_MPA = MPA.MPA_ID" +
                 " WHERE FILM_ID = ?";

@@ -15,7 +15,7 @@ public interface UserStorage {
     /**
      * Получение пользователя
      */
-    User getUser(Long userId);
+    User getUserOrThrow(Long userId);
 
     /**
      * Создание пользователя

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.LikeService;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -19,11 +20,13 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    final FilmService filmService;
+    private final FilmService filmService;
+    private final LikeService likeService;
 
     @Autowired
-    public FilmController(FilmService filmService) {
+    public FilmController(FilmService filmService, LikeService likeService) {
         this.filmService = filmService;
+        this.likeService = likeService;
     }
 
     @GetMapping
@@ -48,16 +51,16 @@ public class FilmController {
 
     @PutMapping("/{id}/like/{userId}")
     public void addLike(@PathVariable Long id, @PathVariable Long userId) {
-        filmService.addLike(id, userId);
+        likeService.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
     public void deleteLike(@PathVariable Long id, @PathVariable Long userId) {
-        filmService.removeLike(id, userId);
+        likeService.removeLike(id, userId);
     }
 
     @GetMapping("/popular")
     public Collection<Film> getTopFilms(@RequestParam(defaultValue = "10") Long count) {
-        return filmService.getPopularFilmList(count);
+        return likeService.getPopularFilmList(count);
     }
 }

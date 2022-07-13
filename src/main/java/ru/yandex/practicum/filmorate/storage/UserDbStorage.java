@@ -36,7 +36,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public User getUser(Long userId) {
+    public User getUserOrThrow(Long userId) {
         final String sql = "SELECT USER_ID, EMAIL, LOGIN,USER_NAME, BIRTHDAY FROM USERS WHERE USER_ID = ?";
 
         List<User> users = jdbcTemplate.query(sql, UserDbStorage::makeUser, userId);

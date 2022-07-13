@@ -70,10 +70,10 @@ public class UserService {
 
     public User getUser(Long userId) {
         userExistOrThrow(userId);
-        return userStorage.getUser(userId);
+        return userStorage.getUserOrThrow(userId);
     }
 
     private void userExistOrThrow(Long userId) {
-        userStorage.getUser(userId);
+        userStorage.getUserOrThrow(userId);
     }
 }
