@@ -17,13 +17,14 @@ import java.util.Set;
 @Getter
 @Setter
 public class Film {
-    public Film(Long id, String name, String description, LocalDate releaseDate, Long duration, MPA mpa) {
+    public Film(Long id, String name, String description, LocalDate releaseDate, Long duration, Long mpaId, String mpaName) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
-        this.mpa = mpa;
+        mpa.setId(mpaId);
+        mpa.setName(mpaName);
     }
 
     private Long id;
@@ -36,7 +37,7 @@ public class Film {
     @Positive(message = "duration should be positive")
     private Long duration;
     private Set<Long> likes = new HashSet<>();
-    private MPA mpa;
+    private MPA mpa = new MPA();
     private Set<Genre> genres = new HashSet<>();
 
     public void addLike(Long userId) {

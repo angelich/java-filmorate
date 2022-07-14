@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.MPA;
 
 import javax.validation.Valid;
 import java.sql.Date;
@@ -36,8 +35,8 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film getFilmOrThrow(Long filmId) {
-        final String sql = "SELECT FILM_ID, FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION, FILM_MPA FROM FILMS" +
-                //  "JOIN MPA ON FILM.FILM_MPA = MPA.MPA_ID" +
+        final String sql = "SELECT FILM_ID, FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION, FILM_MPA, MPA_NAME FROM FILMS AS F" +
+                " JOIN MPA AS M ON F.FILM_MPA = M.MPA_ID" +
                 " WHERE FILM_ID = ?";
 
         List<Film> films = jdbcTemplate.query(sql, FilmDbStorage::makeFilm, filmId);
@@ -53,8 +52,9 @@ public class FilmDbStorage implements FilmStorage {
                 rs.getString("DESCRIPTION"),
                 rs.getDate("RELEASE_DATE").toLocalDate(),
                 rs.getLong("DURATION"),
-                //   rs.getObject("MPA_NAME", MPA.class),
-                rs.getObject("FILM_MPA", MPA.class));
+                rs.getLong("FILM_MPA"),
+                rs.getString("MPA_NAME")
+        );
     }
 
 
@@ -74,10 +74,10 @@ public class FilmDbStorage implements FilmStorage {
         }, keyHolder);
         film.setId(keyHolder.getKey().longValue());
 
-            for (Genre genre : film.getGenres()) {
-                String sqlQuery = "INSERT INTO FILM_GENRE (FILM_ID, GENRE_ID) VALUES (?,?)";
-                jdbcTemplate.update(sqlQuery, film.getId(), genre.getId());
-            }
+        for (Genre genre : film.getGenres()) {
+            String sqlQuery = "INSERT INTO FILM_GENRE (FILM_ID, GENRE_ID) VALUES (?,?)";
+            jdbcTemplate.update(sqlQuery, film.getId(), genre.getId());
+        }
 
         log.info("Добавлен фильм: {}", film);
         return film;
