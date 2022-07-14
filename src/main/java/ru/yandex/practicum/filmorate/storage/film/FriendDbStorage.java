@@ -1,8 +1,10 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.film;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.FriendStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import java.util.List;
 

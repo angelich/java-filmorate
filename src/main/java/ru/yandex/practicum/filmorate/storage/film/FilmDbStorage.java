@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,7 +47,7 @@ public class FilmDbStorage implements FilmStorage {
         return films.get(0);
     }
 
-    static Film makeFilm(ResultSet rs, int rowNum) throws SQLException {
+    public static Film makeFilm(ResultSet rs, int rowNum) throws SQLException {
         return new Film(rs.getLong("FILM_ID"),
                 rs.getString("FILM_NAME"),
                 rs.getString("DESCRIPTION"),

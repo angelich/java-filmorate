@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -46,7 +46,7 @@ public class UserDbStorage implements UserStorage {
         return users.get(0);
     }
 
-    static User makeUser(ResultSet rs, int rowNum) throws SQLException {
+    public static User makeUser(ResultSet rs, int rowNum) throws SQLException {
         return new User(rs.getLong("USER_ID"),
                 rs.getString("EMAIL"),
                 rs.getString("LOGIN"),
