@@ -37,7 +37,7 @@ public class Film {
     private Long duration;
     private Set<Long> likes = new HashSet<>();
     private MPA mpa;
-    private Set<Genre> genres;
+    private Set<Genre> genres = new HashSet<>();
 
     public void addLike(Long userId) {
         likes.add(userId);

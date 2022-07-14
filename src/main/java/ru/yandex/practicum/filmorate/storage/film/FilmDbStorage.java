@@ -37,7 +37,7 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Film getFilmOrThrow(Long filmId) {
         final String sql = "SELECT FILM_ID, FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION, FILM_MPA FROM FILMS" +
-              //  "JOIN MPA ON FILM.FILM_MPA = MPA.MPA_ID" +
+                //  "JOIN MPA ON FILM.FILM_MPA = MPA.MPA_ID" +
                 " WHERE FILM_ID = ?";
 
         List<Film> films = jdbcTemplate.query(sql, FilmDbStorage::makeFilm, filmId);
@@ -53,7 +53,7 @@ public class FilmDbStorage implements FilmStorage {
                 rs.getString("DESCRIPTION"),
                 rs.getDate("RELEASE_DATE").toLocalDate(),
                 rs.getLong("DURATION"),
-             //   rs.getObject("MPA_NAME", MPA.class),
+                //   rs.getObject("MPA_NAME", MPA.class),
                 rs.getObject("FILM_MPA", MPA.class));
     }
 
@@ -74,10 +74,10 @@ public class FilmDbStorage implements FilmStorage {
         }, keyHolder);
         film.setId(keyHolder.getKey().longValue());
 
-        for (Genre genre : film.getGenres()) {
-            String sqlQuery = "INSERT INTO FILM_GENRE (FILM_ID, GENRE_ID) VALUES (?,?)";
-            jdbcTemplate.update(sqlQuery, film.getId(), genre.getId());
-        }
+            for (Genre genre : film.getGenres()) {
+                String sqlQuery = "INSERT INTO FILM_GENRE (FILM_ID, GENRE_ID) VALUES (?,?)";
+                jdbcTemplate.update(sqlQuery, film.getId(), genre.getId());
+            }
 
         log.info("Добавлен фильм: {}", film);
         return film;

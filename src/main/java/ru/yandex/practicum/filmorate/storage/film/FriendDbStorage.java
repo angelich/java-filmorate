@@ -19,7 +19,7 @@ public class FriendDbStorage implements FriendStorage {
     @Override
     public void addFriend(Long userId, Long friendId) {
         String sql = "INSERT INTO FRIENDSHIP (USER_ID, FRIEND_ID, STATUS) VALUES (?,?,?)";
-        jdbcTemplate.update(sql, userId, friendId, "Approved");
+        jdbcTemplate.update(sql, userId, friendId, 1);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class FriendDbStorage implements FriendStorage {
     @Override
     public List<User> getUserFriends(Long userId) {
         String sql = "SELECT * FROM USERS WHERE USER_ID IN (SELECT FRIEND_ID FROM FRIENDSHIP WHERE FRIENDSHIP.USER_ID = ?)";
-        return jdbcTemplate.query(sql, UserDbStorage::makeUser);
+        return jdbcTemplate.query(sql, UserDbStorage::makeUser, userId);
     }
 
     @Override
@@ -40,6 +40,6 @@ public class FriendDbStorage implements FriendStorage {
                 "SELECT FRIEND_ID FROM FRIENDSHIP WHERE FRIENDSHIP.USER_ID = ?" +
                 "INTERSECT " +
                 "SELECT FRIEND_ID FROM FRIENDSHIP WHERE FRIENDSHIP.USER_ID = ?)";
-        return jdbcTemplate.query(sql, UserDbStorage::makeUser);
+        return jdbcTemplate.query(sql, UserDbStorage::makeUser, userId, otherId);
     }
 }
