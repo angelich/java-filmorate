@@ -6,7 +6,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestBody;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 
@@ -17,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Repository
 @Slf4j
@@ -29,7 +29,8 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Collection<Film> getAll() {
-        String sql = "SELECT FILM_ID, FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION, FILM_MPA FROM FILMS";
+        String sql = "SELECT FILM_ID, FILM_NAME, DESCRIPTION, RELEASE_DATE, DURATION, FILM_MPA, MPA_NAME FROM FILMS AS F" +
+                " JOIN MPA AS M ON F.FILM_MPA = M.MPA_ID";
         return jdbcTemplate.query(sql, FilmDbStorage::makeFilm);
     }
 
@@ -41,7 +42,7 @@ public class FilmDbStorage implements FilmStorage {
 
         List<Film> films = jdbcTemplate.query(sql, FilmDbStorage::makeFilm, filmId);
         if (films.size() != 1) {
-            throw new ValidationException("Фильм не найден");
+            throw new NoSuchElementException("Фильм не найден");
         }
         return films.get(0);
     }
