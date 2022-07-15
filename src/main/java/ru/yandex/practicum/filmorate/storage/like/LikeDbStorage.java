@@ -26,8 +26,11 @@ public class LikeDbStorage implements LikeStorage {
     }
 
     public List<Film> getPopularFilmList(Long count) {
-        String sql = "SELECT * FROM FILMS WHERE FILM_ID IN (" +
-                "SELECT FILM_ID FROM LIKES GROUP BY FILM_ID ORDER BY COUNT(LIKES.FILM_ID) DESC LIMIT ?)";
+        String sql = "SELECT * FROM FILMS AS F " +
+                "LEFT JOIN MPA M on F.FILM_MPA = M.MPA_ID " +
+                "LEFT JOIN LIKES L on F.FILM_ID = L.FILM_ID " +
+                "GROUP BY F.FILM_ID ORDER BY COUNT(L.FILM_ID) DESC LIMIT ?";
+
         return jdbcTemplate.query(sql, FilmDbStorage::makeFilm, count);
     }
 }
