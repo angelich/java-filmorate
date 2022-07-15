@@ -36,15 +36,15 @@ public class Film {
     private LocalDate releaseDate;
     @Positive(message = "duration should be positive")
     private Long duration;
-    private Set<Long> likes = new HashSet<>();
+ //   private Long likes;
     private MPA mpa = new MPA();
     private Set<Genre> genres = new HashSet<>();
 
-    public void addLike(Long userId) {
+/*    public void addLike(Long userId) {
         likes.add(userId);
     }
 
     public void removeLike(Long userId) {
         likes.remove(userId);
-    }
+    }*/
 }

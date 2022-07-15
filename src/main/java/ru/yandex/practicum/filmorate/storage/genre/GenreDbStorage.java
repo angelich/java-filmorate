@@ -37,4 +37,9 @@ public class GenreDbStorage implements GenreStorage {
     static Genre makeGenre(ResultSet rs, int rowNum) throws SQLException {
         return new Genre(rs.getLong("GENRE_ID"), rs.getString("GENRE_NAME"));
     }
+
+    public List<Genre> getFilmGenres(Long filmId) {
+        String sql = "SELECT DISTINCT * FROM FILM_GENRE F JOIN GENRE G2 on G2.GENRE_ID = F.GENRE_ID WHERE FILM_ID = ?";
+        return jdbcTemplate.query(sql, GenreDbStorage::makeGenre, filmId);
+    }
 }

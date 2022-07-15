@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -23,12 +22,12 @@ public class FilmService {
     public static final int DESCRIPTION_MAX_LENGTH = 200;
     public static final LocalDate FILMOGRAPHY_START_DATE = LocalDate.of(1895, 12, 28);
     private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
+    private final GenreService genreService;
 
     @Autowired
-    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage, @Qualifier("userDbStorage") UserStorage userStorage) {
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage, GenreService genreService) {
         this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
+        this.genreService = genreService;
     }
 
     public Collection<Film> getAll() {
@@ -43,11 +42,15 @@ public class FilmService {
     public Film update(@Valid @RequestBody Film film) {
         filmExistOrThrow(film.getId());
         validateFilm(film);
-        return filmStorage.update(film);
+        var newFilm = filmStorage.update(film);
+        newFilm.setGenres(genreService.getFilmGenres(film.getId()));
+        return newFilm;
     }
 
     public Film getFilm(Long filmId) {
-        return filmStorage.getFilmOrThrow(filmId);
+        var film = filmStorage.getFilmOrThrow(filmId);
+        film.setGenres(genreService.getFilmGenres(filmId));
+        return film;
     }
 
     private void filmExistOrThrow(Long filmId) {
