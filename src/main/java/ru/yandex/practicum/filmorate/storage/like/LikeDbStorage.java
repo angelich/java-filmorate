@@ -7,6 +7,9 @@ import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
 
 import java.util.List;
 
+/**
+ * Дао лайков в БД
+ */
 @Repository
 public class LikeDbStorage implements LikeStorage {
     private final JdbcTemplate jdbcTemplate;

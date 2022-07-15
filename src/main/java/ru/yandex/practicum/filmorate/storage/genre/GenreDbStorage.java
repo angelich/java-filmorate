@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * Дао жанров в БД
+ */
 @Repository
 public class GenreDbStorage implements GenreStorage {
     private final JdbcTemplate jdbcTemplate;
@@ -38,6 +41,7 @@ public class GenreDbStorage implements GenreStorage {
         return new Genre(rs.getLong("GENRE_ID"), rs.getString("GENRE_NAME"));
     }
 
+    @Override
     public List<Genre> getFilmGenres(Long filmId) {
         String sql = "SELECT DISTINCT * FROM FILM_GENRE F JOIN GENRE G2 on G2.GENRE_ID = F.GENRE_ID WHERE FILM_ID = ?";
         return jdbcTemplate.query(sql, GenreDbStorage::makeGenre, filmId);

@@ -8,6 +8,9 @@ import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import java.util.List;
 
+/**
+ * Дао друзей в БД
+ */
 @Repository
 public class FriendDbStorage implements FriendStorage {
     private final JdbcTemplate jdbcTemplate;

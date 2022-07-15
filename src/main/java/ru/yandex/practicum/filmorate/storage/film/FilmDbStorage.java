@@ -18,6 +18,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * Дао фильмов в БД
+ */
 @Repository
 @Slf4j
 public class FilmDbStorage implements FilmStorage {

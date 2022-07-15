@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * Дао МПА в БД
+ */
 @Repository
 public class MpaDbStorage implements MpaStorage {
     private final JdbcTemplate jdbcTemplate;

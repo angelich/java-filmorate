@@ -7,6 +7,9 @@ import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
 
 import java.util.List;
 
+/**
+ * Сервис по работе с возрастными ограничениями фильмов
+ */
 @Service
 public class MpaService {
     MpaStorage mpaStorage;
