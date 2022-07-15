@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,6 +30,6 @@ public class GenreService {
     }
 
     public Set<Genre> getFilmGenres(Long filmId) {
-        return new HashSet<>(genreStorage.getFilmGenres(filmId));
+        return new LinkedHashSet<>(genreStorage.getFilmGenres(filmId));
     }
 }
