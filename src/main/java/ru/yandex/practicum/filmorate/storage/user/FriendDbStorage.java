@@ -1,12 +1,12 @@
-package ru.yandex.practicum.filmorate.storage.film;
+package ru.yandex.practicum.filmorate.storage.user;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.user.FriendStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import java.util.List;
+
+import static ru.yandex.practicum.filmorate.model.FriendshipStatus.APPROVED;
 
 /**
  * Дао друзей в БД
@@ -22,7 +22,7 @@ public class FriendDbStorage implements FriendStorage {
     @Override
     public void addFriend(Long userId, Long friendId) {
         String sql = "INSERT INTO FRIENDSHIP (USER_ID, FRIEND_ID, STATUS) VALUES (?,?,?)";
-        jdbcTemplate.update(sql, userId, friendId, 1);
+        jdbcTemplate.update(sql, userId, friendId, APPROVED.getStatusCode());
     }
 
     @Override

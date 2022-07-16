@@ -64,7 +64,7 @@ public class UserDbStorage implements UserStorage {
             statement.setString(1, user.getEmail());
             statement.setString(2, user.getLogin());
             statement.setString(3, user.getName());
-            final LocalDate birthday = user.getBirthday();
+            LocalDate birthday = user.getBirthday();
             if (birthday == null) {
                 statement.setNull(4, Types.DATE);
             } else {

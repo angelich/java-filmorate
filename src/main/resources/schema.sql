@@ -72,7 +72,3 @@ VALUES ( 'Документальный' );
 INSERT INTO GENRE (GENRE_NAME)
 VALUES ( 'Боевик' );
 
-/*alter table LIKES
-    add constraint LIKES_PK
-        unique (USER_ID, FILM_ID);*/
-
