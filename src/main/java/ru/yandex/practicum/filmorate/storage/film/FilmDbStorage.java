@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.MPA;
 
 import javax.validation.Valid;
 import java.sql.Date;
@@ -51,14 +52,14 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public static Film makeFilm(ResultSet rs, int rowNum) throws SQLException {
-        return new Film(rs.getLong("FILM_ID"),
-                rs.getString("FILM_NAME"),
-                rs.getString("DESCRIPTION"),
-                rs.getDate("RELEASE_DATE").toLocalDate(),
-                rs.getLong("DURATION"),
-                rs.getLong("FILM_MPA"),
-                rs.getString("MPA_NAME")
-        );
+        return Film.builder()
+                .id(rs.getLong("FILM_ID"))
+                .name(rs.getString("FILM_NAME"))
+                .description(rs.getString("DESCRIPTION"))
+                .releaseDate(rs.getDate("RELEASE_DATE").toLocalDate())
+                .duration(rs.getLong("DURATION"))
+                .mpa(new MPA(rs.getLong("FILM_MPA"), rs.getString("MPA_NAME")))
+                .build();
     }
 
     @Override

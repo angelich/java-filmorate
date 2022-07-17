@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Хранилище пользователей в БД
  */
@@ -47,11 +49,13 @@ public class UserDbStorage implements UserStorage {
     }
 
     public static User makeUser(ResultSet rs, int rowNum) throws SQLException {
-        return new User(rs.getLong("USER_ID"),
-                rs.getString("EMAIL"),
-                rs.getString("LOGIN"),
-                rs.getString("USER_NAME"),
-                rs.getDate("BIRTHDAY").toLocalDate());
+        return User.builder()
+                .id(rs.getLong("USER_ID"))
+                .email(rs.getString("EMAIL"))
+                .login( rs.getString("LOGIN"))
+                .name( rs.getString("USER_NAME"))
+                .birthday(rs.getDate("BIRTHDAY").toLocalDate())
+                .build();
     }
 
     @Override
@@ -65,14 +69,14 @@ public class UserDbStorage implements UserStorage {
             statement.setString(2, user.getLogin());
             statement.setString(3, user.getName());
             LocalDate birthday = user.getBirthday();
-            if (birthday == null) {
+            if (null == birthday) {
                 statement.setNull(4, Types.DATE);
             } else {
                 statement.setDate(4, Date.valueOf(birthday));
             }
             return statement;
         }, keyHolder);
-        user.setId(keyHolder.getKey().longValue());
+        user.setId(requireNonNull(keyHolder.getKey()).longValue());
 
         log.info("Создан пользователь: {}", user);
         return user;

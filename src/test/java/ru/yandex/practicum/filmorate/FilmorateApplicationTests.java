@@ -16,6 +16,7 @@ import ru.yandex.practicum.filmorate.storage.user.FriendDbStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 
 import static java.time.LocalDate.now;
@@ -36,7 +37,13 @@ class FilmorateApplicationTests {
 
     @Test
     void testFindUserById() {
-        User newUser = new User("email@ma.ru", "login", "name", now().minusYears(20L));
+        User newUser = User.builder()
+                .email("email@ma.ru")
+                .login("login")
+                .name("name")
+                .birthday(now().minusYears(20L))
+                .build();
+
         User createdUser = userStorage.create(newUser);
 
         Optional<User> userOptional = Optional.ofNullable(userStorage.getUserOrThrow(createdUser.getId()));
@@ -55,8 +62,20 @@ class FilmorateApplicationTests {
 
     @Test
     void testGetAllUser() {
-        User newUser1 = new User("email@ma.ru", "login 1", "name 1", now().minusYears(20L));
-        User newUser2 = new User("email2@ma.ru", "login 2", "name 2", now().minusYears(30L));
+        User newUser1 = User.builder()
+                .email("email@ma.ru")
+                .login("login 1")
+                .name("name 1")
+                .birthday(now().minusYears(20L))
+                .build();
+
+        User newUser2 = User.builder()
+                .email("email2@ma.ru")
+                .login("login 2")
+                .name("name 2")
+                .birthday(now().minusYears(30L))
+                .build();
+
         userStorage.create(newUser1);
         userStorage.create(newUser2);
 
@@ -66,10 +85,22 @@ class FilmorateApplicationTests {
 
     @Test
     void testUpdateUser() {
-        User newUser = new User("emailForUpdate@ma.ru", "loginForUpdate", "nameForUpdate", now().minusYears(20L));
+        User newUser = User.builder()
+                .email("emailForUpdate@ma.ru")
+                .login("loginForUpdate")
+                .name("nameForUpdate")
+                .birthday(now().minusYears(20L))
+                .build();
+
         User createdUser = userStorage.create(newUser);
-        User userForUpdate =
-                new User(createdUser.getId(), "updateduser@email.ru", "updatedLogin", "updatedName", now().minusYears(20L));
+
+        User userForUpdate = User.builder()
+                .id(createdUser.getId())
+                .email("updateduser@email.ru")
+                .login("updatedLogin")
+                .name("updatedName")
+                .birthday(now().minusYears(20L))
+                .build();
 
         Optional<User> userOptional = Optional.ofNullable(userStorage.update(userForUpdate));
 
@@ -87,7 +118,14 @@ class FilmorateApplicationTests {
 
     @Test
     void testFindFilmById() {
-        Film newFilm = new Film("filmName", "film description", now().minusYears(20L), 100L, 1L);
+        Film newFilm = Film.builder()
+                .name("filmName")
+                .description("film description")
+                .releaseDate(now().minusYears(20L))
+                .duration(100L)
+                .mpa(new MPA(1L, "G"))
+                .genres(new HashSet<>())
+                .build();
         Film createdFilm = filmStorage.create(newFilm);
         var filmOptional = Optional.ofNullable(filmStorage.getFilmOrThrow(createdFilm.getId()));
 
@@ -105,9 +143,26 @@ class FilmorateApplicationTests {
 
     @Test
     void testUpdateFilm() {
-        Film newFilm = new Film("filmNameForUpdate", "film description for update", now().minusYears(20L), 100L, 1L);
+        Film newFilm = Film.builder()
+                .name("filmNameForUpdate")
+                .description("film description for update")
+                .releaseDate(now().minusYears(20L))
+                .duration(100L)
+                .mpa(new MPA(1L, "G"))
+                .genres(new HashSet<>())
+                .build();
+
         Film createdFilm = filmStorage.create(newFilm);
-        Film filmForUpdate = new Film(createdFilm.getId(), "updated name", "updated description", now().minusYears(30L), 200L, 2L);
+
+        Film filmForUpdate = Film.builder()
+                .id(createdFilm.getId())
+                .name("updated name")
+                .description("updated description")
+                .releaseDate(now().minusYears(30L))
+                .duration(200L)
+                .mpa(new MPA(2L, "PG"))
+                .genres(new HashSet<>())
+                .build();
 
         var filmOptional = Optional.ofNullable(filmStorage.update(filmForUpdate));
 
@@ -125,8 +180,21 @@ class FilmorateApplicationTests {
 
     @Test
     void changeFriendshipTest() {
-        var user = userStorage.create(new User("email@ma.ru", "login user", "name user", now().minusYears(20L)));
-        var friend = userStorage.create(new User("email2@ma.ru", "login friend", "name friend", now().minusYears(20L)));
+        var user = userStorage.create(
+                User.builder()
+                        .email("email@ma.ru")
+                        .login("login user")
+                        .name("name user")
+                        .birthday(now().minusYears(20L))
+                        .build());
+
+        var friend = userStorage.create(
+                User.builder()
+                        .email("emailfriend@ma.ru")
+                        .login("login friend")
+                        .name("name friend")
+                        .birthday(now().minusYears(20L))
+                        .build());
 
         friendStorage.addFriend(user.getId(), friend.getId());
         var userFriends = friendStorage.getUserFriends(user.getId());
