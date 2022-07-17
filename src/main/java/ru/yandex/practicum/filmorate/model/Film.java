@@ -29,6 +29,7 @@ public class Film {
     private Long duration;
     private MPA mpa = new MPA();
     private Set<Genre> genres = new HashSet<>();
+    private Set<Long> likes = new HashSet<>();
     public Film(Long id, String name, String description, LocalDate releaseDate, Long duration, Long mpaId, String mpaName) {
         this.id = id;
         this.name = name;

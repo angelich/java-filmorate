@@ -61,6 +61,6 @@ public class FilmController {
 
     @GetMapping("/popular")
     public Collection<Film> getTopFilms(@RequestParam(defaultValue = "10") Long count) {
-        return likeService.getPopularFilmList(count);
+        return filmService.getPopularFilmList(count);
     }
 }

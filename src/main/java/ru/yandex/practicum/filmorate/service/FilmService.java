@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Сервис по работе с фильмами
@@ -51,6 +52,10 @@ public class FilmService {
         var film = filmStorage.getFilmOrThrow(filmId);
         film.setGenres(genreService.getFilmGenres(filmId));
         return film;
+    }
+
+    public List<Film> getPopularFilmList(Long count) {
+        return filmStorage.getPopularFilmList(count);
     }
 
     private void filmExistOrThrow(Long filmId) {
