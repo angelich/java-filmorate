@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -8,7 +8,9 @@ import ru.yandex.practicum.filmorate.model.Film;
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Хранилище фильмов в памяти
@@ -29,7 +31,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film getFilm(Long filmId) {
+    public Film getFilmOrThrow(Long filmId) {
         return films.get(filmId);
     }
 
@@ -47,5 +49,12 @@ public class InMemoryFilmStorage implements FilmStorage {
         films.put(film.getId(), film);
         log.info("Обновлен фильм: {}", film);
         return film;
+    }
+@Override
+    public List<Film> getPopularFilmList(Long count) {
+        return films.values().stream()
+                .sorted((o1, o2) ->  o2.getLikes().size() - o1.getLikes().size())
+                .limit(count)
+                .collect(Collectors.toList());
     }
 }

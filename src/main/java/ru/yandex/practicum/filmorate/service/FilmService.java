@@ -2,19 +2,17 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 /**
  * Сервис по работе с фильмами
@@ -25,12 +23,12 @@ public class FilmService {
     public static final int DESCRIPTION_MAX_LENGTH = 200;
     public static final LocalDate FILMOGRAPHY_START_DATE = LocalDate.of(1895, 12, 28);
     private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
+    private final GenreService genreService;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage, GenreService genreService) {
         this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
+        this.genreService = genreService;
     }
 
     public Collection<Film> getAll() {
@@ -45,47 +43,23 @@ public class FilmService {
     public Film update(@Valid @RequestBody Film film) {
         filmExistOrThrow(film.getId());
         validateFilm(film);
-        return filmStorage.update(film);
-    }
-
-    public void addLike(Long filmId, Long userId) {
-        filmExistOrThrow(filmId);
-        userExistOrThrow(userId);
-        filmStorage.getFilm(filmId).addLike(userId);
-    }
-
-    public void removeLike(Long filmId, Long userId) {
-        filmExistOrThrow(filmId);
-        userExistOrThrow(userId);
-        filmStorage.getFilm(filmId).removeLike(userId);
-    }
-
-    public List<Film> getPopularFilmList(Long count) {
-        return filmStorage.getAll().stream()
-                .sorted((o1, o2) ->  o2.getLikes().size() - o1.getLikes().size())
-                .limit(count)
-                .collect(Collectors.toList());
+        var newFilm = filmStorage.update(film);
+        newFilm.setGenres(genreService.getFilmGenres(film.getId()));
+        return newFilm;
     }
 
     public Film getFilm(Long filmId) {
-        filmExistOrThrow(filmId);
-        return filmStorage.getFilm(filmId);
+        var film = filmStorage.getFilmOrThrow(filmId);
+        film.setGenres(genreService.getFilmGenres(filmId));
+        return film;
     }
 
-    private void userExistOrThrow(Long userId) {
-        boolean isUserNotExist = userStorage.getAll().stream()
-                .noneMatch(user -> user.getId().equals(userId));
-        if (isUserNotExist) {
-            throw new NoSuchElementException("Пользователя с таким идентификатором не существует");
-        }
+    public List<Film> getPopularFilmList(Long count) {
+        return filmStorage.getPopularFilmList(count);
     }
 
     private void filmExistOrThrow(Long filmId) {
-        boolean isFilmNotExist = filmStorage.getAll().stream()
-                .noneMatch(film -> film.getId().equals(filmId));
-        if (isFilmNotExist) {
-            throw new NoSuchElementException("Фильма с таким идентификатором не существует");
-        }
+        filmStorage.getFilmOrThrow(filmId);
     }
 
     private static void validateFilm(Film film) {

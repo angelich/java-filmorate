@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.user;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.model.User;
@@ -15,7 +15,7 @@ public interface UserStorage {
     /**
      * Получение пользователя
      */
-    User getUser(Long userId);
+    User getUserOrThrow(Long userId);
 
     /**
      * Создание пользователя

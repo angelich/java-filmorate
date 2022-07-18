@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,22 +17,19 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class Film {
-    Long id;
+    private Long id;
+
     @NotNull(message = "name can't be empty")
     @NotBlank(message = "name can't be empty")
-    String name;
-    String description;
-    LocalDate releaseDate;
+    private String name;
+
+    private String description;
+    private LocalDate releaseDate;
     @Positive(message = "duration should be positive")
-    Long duration;
-    Set<Long> likes = new HashSet<>();;
-
-    public void addLike(Long userId) {
-        likes.add(userId);
-    }
-
-    public void removeLike(Long userId) {
-        likes.remove(userId);
-    }
+    private Long duration;
+    private MPA mpa = new MPA();
+    private Set<Genre> genres = new HashSet<>();
+    private Set<Long> likes = new HashSet<>();
 }
